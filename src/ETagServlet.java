@@ -1,4 +1,5 @@
 import com.google.common.base.Strings;
+import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
@@ -20,6 +21,7 @@ public class ETagServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        BasicConfigurator.configure();
         logger.log(Level.INFO, "Remote Address: " + request.getRemoteAddr());
         Cookie[] cookies = request.getCookies();
         String smartUID = null;
