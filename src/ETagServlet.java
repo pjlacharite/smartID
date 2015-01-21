@@ -3,6 +3,7 @@ import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
@@ -16,12 +17,16 @@ public class ETagServlet extends HttpServlet {
     private static final String SMART_COOKIE = "smartUID";
     private static final Logger logger = Logger.getLogger(ETagServlet.class.getCanonicalName());
 
+    public ETagServlet(){
+        super();
+        BasicConfigurator.configure();
+    }
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doGet(request, response);
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        BasicConfigurator.configure();
         logger.log(Level.INFO, "Remote Address: " + request.getRemoteAddr());
         Cookie[] cookies = request.getCookies();
         String smartUID = null;
@@ -62,5 +67,7 @@ public class ETagServlet extends HttpServlet {
         //Update the eTag.
         logger.log(Level.INFO, "Updating the eTag");
         response.setHeader("ETag", smartUID);
+        response.addHeader("Access-Control-Allow-Origin", "*");
+        response.addHeader("Access-Control-Expose-Headers", "ETag");
     }
 }
