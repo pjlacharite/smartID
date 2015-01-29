@@ -1,9 +1,5 @@
 import com.google.common.base.Strings;
-import org.apache.log4j.BasicConfigurator;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
@@ -12,15 +8,12 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ETagServlet extends HttpServlet {
     private static final String SMART_COOKIE = "smartUID";
     private static final Logger logger = Logger.getLogger(ETagServlet.class.getCanonicalName());
-
-    public ETagServlet(){
-        super();
-        BasicConfigurator.configure();
-    }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doGet(request, response);
