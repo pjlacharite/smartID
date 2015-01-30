@@ -20,7 +20,7 @@ public class ETagServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        logger.log(Level.INFO, "Remote Address: " + request.getRemoteAddr());
+        logger.log(Level.FINE, "Remote Address: " + request.getRemoteAddr());
         Cookie[] cookies = request.getCookies();
         String smartUID = null;
         if (cookies != null){
@@ -28,19 +28,19 @@ public class ETagServlet extends HttpServlet {
             for(Cookie cookie : cookies){
                 if(SMART_COOKIE.equals(cookie.getName())){
                     smartUID = cookie.getValue();
-                    logger.log(Level.INFO, "Cookie: " + smartUID);
+                    logger.log(Level.FINE, "Cookie: " + smartUID);
                 }
             }
         }
         //Get the previous eTag
         String eTag  =  request.getHeader("If-None-Match");
-        logger.log(Level.INFO, "Previous eTag: " + eTag);
+        logger.log(Level.FINE, "Previous eTag: " + eTag);
         // If no smartUID was found in cookie.
         if (!Strings.isNullOrEmpty(smartUID)){
             eTag =  request.getHeader("If-None-Match");
             if (smartUID.equals(eTag )){
                 //eTag matched, send 304 Not Modified
-                logger.log(Level.INFO, "304 Not Modified");
+                logger.log(Level.FINE, "304 Not Modified");
                 response.sendError(HttpServletResponse.SC_NOT_MODIFIED);
             }else{
                 response.setDateHeader("Last-Modified", Calendar.getInstance().getTime().getTime());
@@ -50,15 +50,15 @@ public class ETagServlet extends HttpServlet {
             if (Strings.isNullOrEmpty(eTag)){
                 //If we don't, generate a new UUID.
                 eTag  = UUID.randomUUID().toString();
-                logger.log(Level.INFO, "Generating new UUID");
+                logger.log(Level.FINE, "Generating new UUID");
             }
             //Set the cookie in the response.
             smartUID = eTag;
             response.addCookie(new Cookie(SMART_COOKIE, smartUID));
-            logger.log(Level.INFO, "Creating new cookie.");
+            logger.log(Level.FINE, "Creating new cookie.");
         }
         //Update the eTag.
-        logger.log(Level.INFO, "Updating the eTag");
+        logger.log(Level.FINE, "Updating the eTag");
         response.setHeader("ETag", smartUID);
         response.addHeader("Access-Control-Allow-Origin", "*");
         response.addHeader("Access-Control-Expose-Headers", "ETag");
